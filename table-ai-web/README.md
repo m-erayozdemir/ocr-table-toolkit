@@ -7,7 +7,7 @@ with an annotated image showing the detected boxes.
 ## Run locally
 
 Run these commands from `table-ai-web/` using a Python environment supported by
-Ultralytics and EasyOCR/PyTorch. Python 3.11 is a candidate, not yet verified here.
+Ultralytics and EasyOCR/PyTorch. The verified environment uses Python 3.12 on macOS ARM64.
 
 ```sh
 python3 -m venv .venv
@@ -20,20 +20,21 @@ On Windows, activate using `.venv\Scripts\activate`.
 Open http://127.0.0.1:8001, upload a clear table image, select **Extract table**,
 and review the detected regions and downloaded CSV.
 
-The checkpoint must be at `model/best.pt`; it is included in this local copy.
+The checkpoint must be at `model/best.pt`; it is included in this repository.
 EasyOCR runs in English on CPU and may download its own weights at startup.
 The application uses EasyOCR for text recognition; Tesseract is not required.
 Startup, model loading, image upload and CSV generation were checked on macOS
-ARM64 with Python 3.12 on 2026-09-07. The synthetic sample produced incomplete
-recognition, so this confirms operation rather than extraction accuracy. Package
-versions are recorded in `requirements-tested-macos-arm64.txt`.
+ARM64 with Python 3.12. Following the isolated-digit recognition fix, a six-row,
+three-column reference table produced all 18 expected cells. Synthetic digit and
+blank-cell regression tests passed. These checks are not an accuracy benchmark.
+Package versions are recorded in `requirements-tested-macos-arm64.txt`.
 
 ## Example input
 
 The sibling application includes `../ocr-enumerator/examples/generate_sample.py`.
 Run it in the Enumerator environment, then upload the generated PNG here.
-The example is synthetic. Actual detection/OCR results have not yet been recorded;
-the generated enum reference belongs to Enumerator, not this application's CSV.
+The example is synthetic and is intended for exploration; the generated enum
+reference belongs to Enumerator. It is not an expected CSV output or an accuracy benchmark.
 
 ## Processing
 
@@ -55,8 +56,8 @@ that directory when you no longer need its outputs; it is recreated at startup.
 - Recognized text segments are joined. If text detection misses an isolated
   character, the cell interior is recognized directly with a confidence filter.
   This improves isolated digits but does not guarantee recognition accuracy.
-- No accuracy benchmark, model compatibility test, or training reproduction is
-  included. See [MODEL.md](MODEL.md).
+- No accuracy benchmark, cross-platform compatibility matrix or training
+  reproduction is included. See [MODEL.md](MODEL.md).
 - Upload size is not bounded at the application layer. Processing is synchronous;
   there is no authentication, output expiry, or multi-user isolation. Use locally.
 - CSV contains recognized text without spreadsheet formula neutralization.
