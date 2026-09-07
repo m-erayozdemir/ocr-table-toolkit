@@ -1,0 +1,39 @@
+<!-- app/templates/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ app_title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body data-min-conf="{{ min_conf }}">
+  <div class="container">
+    <h1>{{ app_title }}</h1>
+
+    <div class="card">
+      <form id="form" enctype="multipart/form-data">
+        <input type="file" id="file" name="file" accept="image/png,image/jpeg" required />
+        <button class="btn" type="submit">Extract</button>
+        <span class="muted">PNG or JPG. Single table. Local only.</span>
+      </form>
+    </div>
+
+    <div id="editor" class="card hidden"></div>
+
+    <div id="outputs" class="row hidden">
+      <div class="col">
+        <h2>C Enum</h2>
+        <pre id="pyout"></pre>
+        <button class="btn" id="copyPy">Copy</button>
+      </div>
+      <div class="col">
+        <h2>Text</h2>
+        <pre id="txtout"></pre>
+        <button class="btn" id="copyTxt">Copy</button>
+      </div>
+    </div>
+  </div>
+  <script src="/static/script.js"></script>
+</body>
+</html>
