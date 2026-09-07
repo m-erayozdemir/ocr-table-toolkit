@@ -1,67 +1,69 @@
 # OCR Table Toolkit
 
-Two internship prototypes by Mehmet Eray Ozdemir for extracting structured
-information from table images: an editable OCR-to-enum tool and a web application
-that combines a trained detection model with OCR to export CSV files.
+Two Python applications for converting table images into structured data and C
+enumerations. Developed by Mehmet Eray Ozdemir during an internship, the project
+explores both OCR-based table reconstruction and custom model-assisted cell detection.
 
-| Application | Approach | Output |
+## Applications
+
+| Application | Workflow | Output |
 | --- | --- | --- |
-| [OCR Enumerator](ocr-enumerator/README.md) | EasyOCR, image preprocessing, heuristic row/column reconstruction, manual editing | C enum and text mappings |
-| [TableAI Web](table-ai-web/README.md) | YOLO detection checkpoint, EasyOCR on detected regions, grid reconstruction | Detection overlay and CSV |
+| [OCR Enumerator](ocr-enumerator/README.md) | Recognize text, reconstruct a table, review cells and select columns | C enum and text mappings |
+| [TableAI Web](table-ai-web/README.md) | Detect cells with YOLO, read their contents with EasyOCR and reconstruct a grid | Annotated image and CSV |
 
-These are separate applications within the same body of OCR work. The available
-Enumerator implementation does not train or load the YOLO checkpoint.
+**Technologies:** Python, FastAPI, OpenCV, EasyOCR, Ultralytics YOLO, NumPy,
+JavaScript and HTML/CSS.
 
-## Project structure
+## Key capabilities
 
-```text
-ocr-enumerator/
-  app/                 # API, OCR engine, editable browser interface
-  examples/            # Synthetic table generator and reference enum
-  requirements.txt
-table-ai-web/
-  app.py               # Detection, OCR, table reconstruction and web interface
-  model/best.pt        # Preserved checkpoint
-  requirements.txt
-  MODEL.md             # Provenance and missing training artifacts
-```
+- Image preprocessing and geometric row/column reconstruction.
+- Editable OCR results with low-confidence cells highlighted for review.
+- Custom-trained detection checkpoint integrated into a web upload workflow.
+- Direct cell recognition fallback for isolated characters missed by text detection.
+- Synthetic input generation and regression checks for isolated digits and blank cells.
 
 ## Getting started
 
-Follow the README for the application you want to run. Each has its own virtual
-environment and dependency list; use ports 8000 and 8001 to run both together.
-Both are intended for local use. EasyOCR may download recognition weights on its
-first startup. No hosted demonstration or external OCR API is provided.
+Each application has its own dependencies and launch instructions:
 
-## Model training and available evidence
+- [Run OCR Enumerator](ocr-enumerator/README.md#run-locally)
+- [Run TableAI Web](table-ai-web/README.md#run-locally)
 
-The author reports training a model during the OCR project and using it in
-TableAI Web. The preserved checkpoint contains references to `yolov8n.pt`,
-`dataset/data.yaml`, and a historical `TableAI/runs/detect/train` directory.
-These were inspected as archive metadata without loading/executing the model.
+Both run locally. EasyOCR may download recognition weights on first startup.
+The applications are independent; OCR Enumerator does not require the YOLO model.
 
-The training script/notebook, dataset, annotations and evaluation report are not
-available in this archive. Training cannot be reproduced from this repository,
-and no accuracy figures or verified training hyperparameters are claimed.
-See [model notes](table-ai-web/MODEL.md).
+## Model and repository contents
 
-## Portfolio preparation status
+The YOLO checkpoint trained during the OCR project is included at
+`table-ai-web/model/best.pt`. The training code, dataset and evaluation report
+are no longer available, so this repository supports inference rather than
+reproducing training. See [model documentation](table-ai-web/MODEL.md).
 
-- Setup paths and documentation have been cleaned up. A fallback OCR step
-  recovers isolated digits missed by text detection.
-- Existing sample documents and generated image/CSV outputs were excluded.
-  A synthetic example generator is provided instead.
-- TableAI Web startup, checkpoint loading, image upload and CSV generation were
-  checked on macOS ARM64 / Python 3.12 on 2026-09-07. The synthetic image produced
-  incomplete cell recognition; this is an operation check, not an accuracy benchmark.
-- Installed TableAI versions are recorded in its `requirements-tested-macos-arm64.txt`.
-  OCR Enumerator itself still awaits an end-to-end check.
-- A six-row, three-column reference table produced all 18 expected cells after
-  the isolated-digit fix. Synthetic digit and empty-cell regression tests pass.
+```text
+ocr-enumerator/
+  app/          API, OCR engine and editable web interface
+  examples/     Synthetic input generator and reference enum
+table-ai-web/
+  app.py        Detection, OCR, grid reconstruction and CSV export
+  model/        Trained detection checkpoint
+  tests/        OCR regression checks
+```
 
-## Attribution and release
+## Validation and limitations
 
-Developed during an internship and shared by the author as a portfolio project.
-No project license is assigned;
-third-party dependencies retain their own licenses. No safety-standard
-compliance or production-readiness claim is made.
+TableAI Web was checked on macOS ARM64 with Python 3.12: model loading, image
+upload and CSV generation worked. A six-row, three-column reference table
+produced all 18 expected cells after the isolated-digit fix. Synthetic digit and
+blank-cell regression tests passed. The installed package versions are recorded
+in `table-ai-web/requirements-tested-macos-arm64.txt`.
+
+These checks are not an accuracy benchmark. Complex layouts, merged cells and
+poor image quality can affect extraction. OCR Enumerator's complete UI workflow
+has not been revalidated in this release. Review extracted values before use;
+the application READMEs describe component-specific limitations.
+
+## Author
+
+Mehmet Eray Ozdemir. Published as an internship portfolio project.
+Third-party components retain their respective licenses; no project-wide license
+has been assigned.
