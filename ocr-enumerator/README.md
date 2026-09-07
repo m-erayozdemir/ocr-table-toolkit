@@ -31,8 +31,8 @@ Open http://127.0.0.1:8000. EasyOCR initializes at startup and may download mode
 weights on first use, requiring internet access. Subsequent OCR runs use the
 local model. No API key or external OCR service is configured.
 
-Dependencies are currently unpinned; a tested environment and version lock are
-still pending. This preparation has not yet been validated by running OCR.
+Dependencies are unpinned. The complete OCR and editing workflow has not been
+revalidated for this release.
 
 ## Synthetic example
 
